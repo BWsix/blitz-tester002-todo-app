@@ -5,11 +5,6 @@ import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import logout from "app/auth/mutations/logout"
 import logo from "public/logo.png"
 
-/*
- * This file is just for a pleasant getting started page for your new app.
- * You can delete everything in here and start from scratch if you like.
- */
-
 const UserInfo = () => {
   const currentUser = useCurrentUser()
   const [logoutMutation] = useMutation(logout)
@@ -43,6 +38,11 @@ const UserInfo = () => {
         <Link href={Routes.LoginPage()}>
           <a className="button small">
             <strong>Login</strong>
+          </a>
+        </Link>
+        <Link href="/api/auth/github">
+          <a className="button small">
+            <strong>Sign up with GitHub</strong>
           </a>
         </Link>
       </>
