@@ -1,14 +1,14 @@
-import { resolver } from "blitz"
+import { Ctx, resolver } from "blitz"
 import db from "db"
-import { z } from "zod"
+import { DeleteTodo } from "../validations"
 
-const DeleteTodo = z.object({
-  id: z.number(),
-})
+export default resolver.pipe(
+  resolver.zod(DeleteTodo),
+  resolver.authorize(),
+  async ({ id }, ctx: Ctx) => {
+    const userId = ctx.session.userId as number
+    const todo = await db.todo.deleteMany({ where: { userId, id } })
 
-export default resolver.pipe(resolver.zod(DeleteTodo), resolver.authorize(), async ({ id }) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const todo = await db.todo.deleteMany({ where: { id } })
-
-  return todo
-})
+    return todo
+  }
+)

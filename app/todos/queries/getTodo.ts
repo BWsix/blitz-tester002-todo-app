@@ -1,17 +1,17 @@
-import { resolver, NotFoundError } from "blitz"
+import { Ctx, NotFoundError, resolver } from "blitz"
 import db from "db"
-import { z } from "zod"
+import { GetTodo } from "../validations"
 
-const GetTodo = z.object({
-  // This accepts type of undefined, but is required at runtime
-  id: z.number().optional().refine(Boolean, "Required"),
-})
+export default resolver.pipe(
+  resolver.zod(GetTodo),
+  resolver.authorize(),
+  async ({ id }, ctx: Ctx) => {
+    const userId = ctx.session.userId as number
 
-export default resolver.pipe(resolver.zod(GetTodo), resolver.authorize(), async ({ id }) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const todo = await db.todo.findFirst({ where: { id } })
+    const todo = await db.todo.findFirst({ where: { userId, id } })
 
-  if (!todo) throw new NotFoundError()
+    if (!todo) throw new NotFoundError()
 
-  return todo
-})
+    return todo
+  }
+)

@@ -1,14 +1,16 @@
-import { resolver } from "blitz"
+import { Ctx, resolver } from "blitz"
 import db from "db"
-import { z } from "zod"
+import { CreateTodo } from "../validations"
 
-const CreateTodo = z.object({
-  name: z.string(),
-})
+export default resolver.pipe(
+  resolver.zod(CreateTodo),
+  resolver.authorize(),
+  async (input, ctx: Ctx) => {
+    const data = CreateTodo.parse(input)
+    const userId = ctx.session.userId as number
 
-export default resolver.pipe(resolver.zod(CreateTodo), resolver.authorize(), async (input) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const todo = await db.todo.create({ data: input })
+    const todo = await db.todo.create({ data: { userId, ...data } })
 
-  return todo
-})
+    return todo
+  }
+)
