@@ -24,6 +24,11 @@
     ]
   },
   "dependencies": {
+    "@emotion/react": "11.5.0",
+    "@emotion/styled": "11.3.0",
+    "@mui/material": "5.0.4",
+    "@mui/styles": "5.0.1",
+    "@mui/x-data-grid": "5.0.0-beta.4",
     "@prisma/client": "3.2.1",
     "blitz": "0.41.1",
     "final-form": "4.20.4",
