@@ -14,5 +14,6 @@ export const DeleteTodo = z.object({
 
 export const UpdateTodo = z.object({
   id: z.number().nonnegative(),
-  checked: z.boolean(),
+  checked: z.boolean().optional(),
+  title: z.string().optional(),
 })
